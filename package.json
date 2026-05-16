@@ -1,0 +1,28 @@
+{
+  "name": "v2a-notion-lead-form",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:infra": "docker compose --project-directory . -f deployment/docker-compose.yml up -d --wait && npm run seed",
+    "dev:infra:down": "docker compose --project-directory . -f deployment/docker-compose.yml down",
+    "seed": "echo 'Seed skipped (Docker-free)'",
+    "check-env": "echo 'Check-env skipped'",
+    "dev": "concurrently -k -n ui,bff -c blue,cyan \"npm run dev:ui\" \"npm run dev:bff\"",
+    "dev:full": "concurrently -k -n ui,bff,mcp -c blue,cyan,magenta \"npm run dev:ui\" \"npm run dev:bff\" \"npm run dev:mcp\"",
+    "dev:ui": "npm run dev --workspace frontend",
+    "dev:bff": "npm run dev --workspace bff",
+    "dev:agent": "echo 'Agent Python disabled'",
+    "dev:mcp": "npm run dev --workspace mcp",
+    "install:agent": "echo 'Python Agent install skipped'",
+    "install:mcp": "npm install --workspace mcp",
+    "build": "npm run build --workspace frontend",
+    "start": "npm run start --workspace frontend",
+    "lint": "npm run lint --workspace frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
