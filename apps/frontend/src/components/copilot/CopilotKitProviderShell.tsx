@@ -16,12 +16,19 @@
  */
 
 import { CopilotKitProvider } from "@copilotkit/react-core/v2";
+import { usePathname } from "next/navigation";
 
 export function CopilotKitProviderShell({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/shop")) {
+    return <>{children}</>;
+  }
+
   return (
     <CopilotKitProvider
       runtimeUrl="/api/copilotkit"

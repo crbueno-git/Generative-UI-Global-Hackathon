@@ -1,15 +1,24 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { loadEnvConfig } from "@next/env";
 import { GoogleGenAI } from "@google/genai";
-
-const LIVE_MODEL = "gemini-3.1-flash-live-preview";
 
 export const runtime = "nodejs";
 
+const here = path.dirname(fileURLToPath(import.meta.url));
+loadEnvConfig(path.resolve(here, "../../../../../.."));
+
+const LIVE_MODEL =
+  process.env.GEMINI_LIVE_MODEL?.trim() ||
+  process.env.NEXT_PUBLIC_GEMINI_LIVE_MODEL?.trim() ||
+  "gemini-3.1-flash-live-preview";
+
 export async function POST() {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_GEMINI_API_KEY;
 
   if (!apiKey) {
     return Response.json(
-      { error: "Defina GEMINI_API_KEY para habilitar o Gemini Live." },
+      { error: "Defina GEMINI_API_KEY ou GOOGLE_GEMINI_API_KEY para habilitar o Gemini Live." },
       { status: 500 },
     );
   }
@@ -40,8 +49,6 @@ export async function POST() {
 
     return Response.json({ token: tokenValue, model: LIVE_MODEL });
   } catch (error) {
-    console.error("Erro ao criar token efemero Gemini Live", error);
-
     return Response.json(
       { error: "Falha ao criar token efemero para o Gemini Live." },
       { status: 500 },
